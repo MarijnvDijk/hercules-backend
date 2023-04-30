@@ -1,5 +1,5 @@
 class InfoDto {
-    PK_id: number;
+    PK_id?: number;
     RemoteAddress: string;
     Endpoint: string;
 }
