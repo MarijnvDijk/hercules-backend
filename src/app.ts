@@ -2,6 +2,7 @@ import helmet from 'helmet';
 
 import Controller from './interfaces/controller.interface';
 import errorMiddleware from './middlewares/error.middleware';
+import infoMiddleware from './middlewares/info.middleware';
 import DatabaseConnection from './repositories/database_connection';
 
 const cors = require('cors')
@@ -48,6 +49,7 @@ class App {
         origin: allowedOrigins,
       }),
     );
+    this.app.use(infoMiddleware);
   }
 
   private initializeControllers(controllers: Controller[]) {

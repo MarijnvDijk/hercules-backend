@@ -22,4 +22,19 @@ export default class InfoRepository extends BaseCrudRepository {
             });
         });
     }
+
+    async logInfo(requestInfo: InfoDto): Promise<InfoDto> | undefined {
+        return new Promise((resolve, reject) => {
+            this.db.getPool().getConnection((_, connection) => {
+                connection.query(
+                    `INSERT INTO ${this.tableName}(RemoteAddress, Endpoint) VALUES(?, ?)`,
+                    [requestInfo.RemoteAddress, requestInfo.Endpoint],
+                    (err: MysqlError, res: InfoDto) => {
+                        if (err) reject(err);
+                        else resolve(res);
+                    }
+                )
+            });
+        });
+    }
 }
