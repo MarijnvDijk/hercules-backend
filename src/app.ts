@@ -7,6 +7,7 @@ import DatabaseConnection from './repositories/database_connection';
 
 const cors = require('cors')
 const express = require('express')
+var bodyParser = require('body-parser')
 
 require('dotenv').config();
 
@@ -49,6 +50,8 @@ class App {
         origin: allowedOrigins,
       }),
     );
+    this.app.use(bodyParser.json({ limit: '10mb' }));
+    this.app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
     this.app.use(infoMiddleware);
   }
 

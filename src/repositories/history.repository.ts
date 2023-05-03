@@ -1,20 +1,20 @@
 import { MysqlError } from "mysql";
 
 import BaseCrudRepository from "./base/BaseCrudRepository";
-import InfoDto from "./DataTransferObjects/info.dto";
+import HistoryDto from "./DataTransferObjects/history.dto";
 
-export default class InfoRepository extends BaseCrudRepository {
+export default class HistoryRepository extends BaseCrudRepository {
     constructor() {
-        super('info');
+        super('history');
     }
 
-    async getDataInfo(): Promise<InfoDto> | undefined {
+    async getHistory(): Promise<HistoryDto>|undefined {
         return new Promise((resolve, reject) => {
             this.db.getPool().getConnection((_, connection) => {
                 connection.query(
                     `SELECT * FROM ${this.tableName}`,
                     [],
-                    (err: MysqlError, res: InfoDto) => {
+                    (err: MysqlError, res: HistoryDto) => {
                         if (err) reject(err);
                         else resolve(res);
                     }
@@ -23,13 +23,13 @@ export default class InfoRepository extends BaseCrudRepository {
         });
     }
 
-    async logInfo(requestInfo: InfoDto): Promise<any> | undefined {
+    async storeHistoryData(historyInfo: HistoryDto, Id: Number): Promise<HistoryDto> | undefined {
         return new Promise((resolve, reject) => {
             this.db.getPool().getConnection((_, connection) => {
                 connection.query(
-                    `INSERT INTO ${this.tableName}(RemoteAddress, Endpoint) VALUES(?, ?)`,
-                    [requestInfo.RemoteAddress, requestInfo.Endpoint],
-                    (err: MysqlError, res: any) => {
+                    `INSERT INTO ${this.tableName}(FK_RequestId, url) VALUES(?, ?)`,
+                    [Id, historyInfo.url],
+                    (err: MysqlError, res: HistoryDto) => {
                         if (err) reject(err);
                         else resolve(res);
                     }
