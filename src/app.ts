@@ -33,7 +33,7 @@ class App {
 
   public listen() {
     const port = process.env.PORT || 3000;
-    this.app.listen(port, () => {
+    this.app.listen(port, '127.0.0.1', () => {
       console.log('info', `Server listening on port ${port}`);
     });
   }
