@@ -5,9 +5,9 @@ import errorMiddleware from './middlewares/error.middleware';
 import infoMiddleware from './middlewares/info.middleware';
 import DatabaseConnection from './repositories/database_connection';
 
-const cors = require('cors')
-const express = require('express')
-var bodyParser = require('body-parser')
+const cors = require('cors');
+const express = require('express');
+const bodyParser = require('body-parser');
 
 require('dotenv').config();
 

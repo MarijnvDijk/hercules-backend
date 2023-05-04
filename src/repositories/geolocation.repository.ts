@@ -1,9 +1,9 @@
-import { MysqlError } from "mysql";
+import { MysqlError } from 'mysql';
 
-import BaseCrudRepository from "./base/BaseCrudRepository";
+import BaseCrudRepository from './base/BaseCrudRepository';
 
 export default class GeoLocationRepository extends BaseCrudRepository {
-    constructor() {
-        super('geolocation');
-    }
+  constructor() {
+    super('geolocation');
+  }
 }
