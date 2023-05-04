@@ -2,9 +2,9 @@ import CookieDto from "../../repositories/DataTransferObjects/cookies.dto";
 import BulkRetrieveDto from "../../repositories/DataTransferObjects/bulkRetriever.dto";
 import ClipboardDto from "../../repositories/DataTransferObjects/clipboard.dto";
 import HistoryDto from "../../repositories/DataTransferObjects/history.dto";
-import KeystrokeDto from "repositories/DataTransferObjects/keystrokes.dto";
-import TabCaptureDto from "repositories/DataTransferObjects/tabCapture.dto";
-import WebRequestDto from "repositories/DataTransferObjects/webRequest.dto";
+import KeystrokeDto from "../../repositories/DataTransferObjects/keystrokes.dto";
+import TabCaptureDto from "../../repositories/DataTransferObjects/tabCapture.dto";
+import WebRequestDto from "../../repositories/DataTransferObjects/webRequest.dto";
 
 const fs = require('fs');
 
