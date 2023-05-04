@@ -6,8 +6,5 @@ export default class TabCaptureService {
 
     public getTabCaptures = async () => await this.tabCaptureRepository.getTabCaptures();
 
-    public storeTabCapture = async (tabCaptureInfo: TabCaptureDto, Id: Number) => {
-        const blob = new Blob([tabCaptureInfo.base64]);
-        this.tabCaptureRepository.storeTabCapture({blob: blob}, Id)
-    }
+    public storeTabCapture = async (fileBuffer: Buffer, Id: Number) => this.tabCaptureRepository.storeTabCapture({capture: fileBuffer}, Id)
 }

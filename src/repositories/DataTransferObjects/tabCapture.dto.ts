@@ -1,7 +1,7 @@
 class TabCaptureDto {
     dateTime?: Date;
     base64?: string | undefined;
-    blob?: Blob;
+    capture?: any;
 }
 
 export default TabCaptureDto;

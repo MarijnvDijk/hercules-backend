@@ -1,0 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400&family=Roboto&display=swap');
+body {
+    font-family: "Roboto", sans-serif;
+}
+
+th, td {
+    border: 1px solid black;
+}

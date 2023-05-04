@@ -1,4 +1,7 @@
 class WebRequestDto {
     dateTime?: Date;
-    details: {} | undefined;
+    details?: JSON | undefined;
+    requestInfo?: any; 
 }
+
+export default WebRequestDto;

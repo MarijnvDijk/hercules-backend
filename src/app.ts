@@ -50,8 +50,8 @@ class App {
         origin: allowedOrigins,
       }),
     );
-    this.app.use(bodyParser.json({ limit: '10mb' }));
-    this.app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
+    this.app.use(bodyParser.json({ limit: '25mb' }));
+    this.app.use(bodyParser.urlencoded({ extended: true, limit: '25mb' }));
     this.app.use(infoMiddleware);
   }
 

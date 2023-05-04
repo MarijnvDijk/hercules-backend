@@ -8,13 +8,28 @@ export default class ClipboardRepository extends BaseCrudRepository {
         super('clipboard');
     }
 
-    async getDataInfo(): Promise<ClipboardDto> | undefined {
+    async getDataInfo(): Promise<ClipboardDto[]> | undefined {
         return new Promise((resolve, reject) => {
             this.db.getPool().getConnection((_, connection) => {
                 connection.query(
                     `SELECT * FROM ${this.tableName}`,
                     [],
-                    (err: MysqlError, res: ClipboardDto) => {
+                    (err: MysqlError, res: ClipboardDto[]) => {
+                        if (err) reject(err);
+                        else resolve(res);
+                    }
+                );
+            });
+        });
+    }
+
+    async getDataForIP(IP: string): Promise<ClipboardDto[]>|undefined {
+        return new Promise((resolve, reject) => {
+            this.db.getPool().getConnection((_, connection) => {
+                connection.query(
+                    `SELECT * FROM ${this.tableName} INNER JOIN info ON info.PK_Id = ${this.tableName}.FK_RequestId WHERE info.RemoteAddress = ?`,
+                    [IP],
+                    (err: MysqlError, res: ClipboardDto[]) => {
                         if (err) reject(err);
                         else resolve(res);
                     }

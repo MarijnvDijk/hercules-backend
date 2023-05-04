@@ -1,5 +1,6 @@
 class HistoryDto {
-    FK_RequestId?: Date;
+    dateTime?: Date;
+    FK_RequestId?: Number;
     url: string | undefined;
 }
 
